@@ -87,12 +87,12 @@ export default function App() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Mobile Header */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-40 bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-30 bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
         <button
-          onClick={() => setSidebarOpen(true)}
+          onClick={() => setSidebarOpen(!sidebarOpen)}
           className="p-2 hover:bg-gray-100 rounded-lg"
         >
-          <Menu className="w-6 h-6 text-gray-600" />
+          {sidebarOpen ? <X className="w-6 h-6 text-gray-600" /> : <Menu className="w-6 h-6 text-gray-600" />}
         </button>
         <h1 className="font-bold text-gray-800">VacationHub</h1>
         <div className="w-8 h-8 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white text-xs font-bold">
@@ -100,7 +100,7 @@ export default function App() {
         </div>
       </div>
 
-      {/* Mobile Overlay */}
+      {/* Mobile Overlay - z-index abaixo do sidebar */}
       {sidebarOpen && (
         <div
           className="lg:hidden fixed inset-0 bg-black/50 z-40"
@@ -108,8 +108,10 @@ export default function App() {
         />
       )}
 
-      {/* Sidebar */}
-      <div className={`lg:block ${sidebarOpen ? 'block' : 'hidden'}`}>
+      {/* Sidebar - z-index acima do overlay */}
+      <div className={`fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-in-out ${
+        sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+      } lg:translate-x-0`}>
         <Sidebar
           currentPage={currentPage}
           onPageChange={handlePageChange}
@@ -117,16 +119,6 @@ export default function App() {
           onLogout={handleLogout}
         />
       </div>
-
-      {/* Mobile close button */}
-      {sidebarOpen && (
-        <button
-          onClick={() => setSidebarOpen(false)}
-          className="lg:hidden fixed top-4 right-4 z-50 p-2 bg-white rounded-lg shadow-lg"
-        >
-          <X className="w-5 h-5 text-gray-600" />
-        </button>
-      )}
 
       {/* Main Content */}
       <main className="lg:ml-64 pt-16 lg:pt-0">
